@@ -60,3 +60,19 @@ class Comment(models.Model):
                                    auto_now_add=True,
                                    help_text="Автоматически заполняется "
                                              "сегодняшней датой")
+
+
+class Follow(models.Model):
+    class Meta:
+        constraints = [models.UniqueConstraint(
+                fields=['user', 'author'], name='unique_follow')]
+    user = models.ForeignKey(User,
+                             on_delete=models.CASCADE,
+                             related_name="follower",
+                             verbose_name="Подписчик",
+                             help_text="Подписчик")
+    author = models.ForeignKey(User,
+                               on_delete=models.CASCADE,
+                               related_name="following",
+                               verbose_name="Автор",
+                               help_text="Подписка на")

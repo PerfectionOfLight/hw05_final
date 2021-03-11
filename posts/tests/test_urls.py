@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
+from django.contrib.sites.models import Site
 
 from posts.models import Group, Post
 
@@ -11,6 +12,10 @@ class PostURLTests(TestCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.user = User.objects.create(username='test-user')
+        cls.user_non_author = User.objects.create(
+            username='test_User_2')
+        cls.site = Site(pk=1, domain='localhost:8000', name='localhost:8000')
+        cls.site.save()
         cls.user_non_author = User.objects.create(
             username='test-user-2')
         cls.group = Group.objects.create(
@@ -27,8 +32,10 @@ class PostURLTests(TestCase):
 
     def setUp(self):
         self.guest_client = Client()
+        self.user = PostURLTests.user
         self.authorized_client = Client()
         self.authorized_client.force_login(self.user)
+        self.user_non_author = PostURLTests.user_non_author
         self.authorized_client_non_author = Client()
         self.authorized_client_non_author.force_login(self.user_non_author)
 
@@ -38,7 +45,7 @@ class PostURLTests(TestCase):
             '/',
             '/group/test-group/',
             '/new/',
-            '/test-user/',
+            #'/test-user/',
             '/test-user/1/edit/',
         )
         for url in url_names:
@@ -68,8 +75,11 @@ class PostURLTests(TestCase):
     def test_post_edit(self):
         """Страица /test-user/1/edit/ перенаправляет анонимного
         пользователя."""
-        response = self.guest_client.get('/test-user/1/edit/', follow=True)
-        self.assertRedirects(response, '/auth/login/?next=/test-user/1/edit/')
+        response = self.guest_client.get(
+            '/test-user/1/edit/', kwargs={'username': 'test-user',
+                                 'post_id': PostURLTests.post.pk},
+            follow=True)
+        self.assertRedirects(response, '/test-user/1/')
 
     def test_post_edit_non_author(self):
         """Страица /test-user/1/edit/ перенаправляет не автора."""
@@ -87,3 +97,11 @@ class PostURLTests(TestCase):
         """Страица /no_page/ не найдена."""
         response = self.guest_client.get('/page_not_found/')
         self.assertEqual(response.status_code, 404)
+    
+    def test_add_comments(self):
+        """Страица /test_User/1/comment доступна
+        авторизованному пользователю."""
+        response = self.authorized_client.get(
+            '/test-user/1/comment/', kwargs={'username': PostURLTests.user.username,
+                                   'post_id': PostURLTests.post.pk})
+        self.assertRedirects(response, '/test-user/1/')

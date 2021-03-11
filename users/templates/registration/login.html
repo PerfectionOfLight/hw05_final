@@ -10,13 +10,20 @@
       <div class="card-body">
         {% if form.errors %}
         <div class="alert alert-danger" role="alert">
-          Имя пользователя и пароль не совпадают. Введите правильные данные.
+          Имя пользоваетеля и пароль не совпадают. Введите правильные данные.
         </div>
         {% endif %}
 
-        <div class="alert alert-info" role="alert">
-          Пожалуйста, авторизуйтесь.
-        </div>
+        {% if next %}
+            <div class="alert alert-info" role="alert">
+              Вы обратились к странице, доступ к которой возможен только для залогиненных пользователей.<br>
+              Пожалуйста, авторизуйтесь.
+            </div>
+        {% else %}
+            <div class="alert alert-info" role="alert">
+              Пожалуйста, авторизуйтесь.
+            </div>
+        {% endif %}
 
         <form method="post" action="{% url 'login' %}">
           {% csrf_token %}
@@ -35,7 +42,7 @@
               </div>
           </div>
 
-          <div class="col-md-6 offset-md-4">              
+          <div class="col-md-6 offset-md-4">
               <button type="submit" class="btn btn-primary">
                 Войти
               </button>
@@ -49,4 +56,4 @@
   </div> <!-- col -->
 </div> <!-- row -->
 
-{% endblock %} 
+{% endblock %}

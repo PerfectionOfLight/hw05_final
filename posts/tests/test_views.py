@@ -3,6 +3,7 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.test.client import Client
+from django.contrib.sites.models import Site
 from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.conf import settings
@@ -31,6 +32,8 @@ class PostViewTests(TestCase):
             content_type='image/gif'
         )
         cls.user = User.objects.create(username='test-user')
+        cls.site = Site(pk=1, domain='localhost:8000', name='localhost:8000')
+        cls.site.save()
         cls.group0 = Group.objects.create(
             title='Тестовая группа',
             slug='test-group',

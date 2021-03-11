@@ -1,17 +1,17 @@
 <div class="card">
     <div class="card-body">
         <div class="h2">
-            {{ author.get_full_name }}
+            {{ user_name.get_full_name }}
         </div>
         <div class="h3 text-muted">
-            {{ author.username }}
+            {{ user_name.username }}
         </div>
     </div>
     <ul class="list-group list-group-flush">
         <li class="list-group-item">
             <div class="h6 text-muted">
-                Подписчиков: XXX <br/>
-                Подписан: XXX
+                Подписчиков: {{ user_name.following.count }} <br/>
+                Подписан: {{ user_name.follower.count }}
             </div>
         </li>
         <li class="list-group-item">
@@ -19,5 +19,20 @@
                 Записей: {{ count }}
             </div>
         </li>
+    {% if user.username != user_name.username %}
+        <li class="list-group-item">
+    {% if following %}
+    <a class="btn btn-lg btn-light"
+            href="{% url 'posts:profile_unfollow' user_name.username %}" role="button">
+            Отписаться
+    </a>
+    {% else %}
+    <a class="btn btn-lg btn-primary"
+            href="{% url 'posts:profile_follow' user_name.username %}" role="button">
+    Подписаться
+    </a>
+    {% endif %}
+</li>
+{% endif %}
     </ul>
 </div>
