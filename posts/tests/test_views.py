@@ -158,7 +158,7 @@ class PostViewTests(TestCase):
     def test_cache(self):
         """При удалении поста кэш не меняется"""
         response = self.authorized_client.get(reverse('posts:index')).content
-        Post.objects.all().delete()
+        Post.objects.get(pk=1).delete()
         response_after_delete = self.authorized_client.get(
             reverse('posts:index')).content
         self.assertEqual(response, response_after_delete)
