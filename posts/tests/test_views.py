@@ -52,7 +52,7 @@ class PostViewTests(TestCase):
             author=cls.user,
             group=cls.group0,
             image=cls.uploaded
-        ) for i in range(2)
+        ) for i in range(10)
         ])
         cls.follow = Follow.objects.create(
             user=cls.user2,
@@ -197,9 +197,9 @@ class PostViewTests(TestCase):
         count_after_unfollow = Follow.objects.count()
         self.assertNotEqual(count_before_unfollow, count_after_unfollow)
 
-    def test_follow_context_for_follow_unfollow(self):
+    def test_follow_context_for_follow(self):
         """Новая запись пользователя появляется в ленте тех, кто на него
-        подписан и не появляется в ленте тех, кто не подписан на него"""
+        подписан"""
         post = Post.objects.create(
             text='test text ',
             author=PostViewTests.user,
@@ -207,5 +207,8 @@ class PostViewTests(TestCase):
         )
         response = self.follower.get(reverse('posts:follow_index'))
         self.assertEqual(response.context['page'][0].pk, post.pk)
+    
+    def test_follow_context_for_unfollow(self):
+        """Новая запись не появляется в ленте тех, кто не подписан на него"""
         response = self.non_follower.get(reverse('posts:follow_index'))
         self.assertEqual(response.context['page'].object_list.count(), 0)

@@ -61,9 +61,8 @@ def profile(request, username):
 
 def post_view(request, username, post_id):
     post = get_object_or_404(Post, pk=post_id, author__username=username)
-    user = get_object_or_404(User, username=username)
     following = request.user.is_authenticated and Follow.objects.filter(
-        user=request.user, author=user).exists()
+        user=request.user, author=post.author).exists()
     post_count = post.author.posts.count()
     comments = post.comments.all()
     form = CommentForm()
@@ -108,11 +107,12 @@ def server_error(request):
 
 @login_required
 def add_comment(request, username, post_id):
+    post = get_object_or_404(Post, pk=post_id, author__username=username)
     form = CommentForm(request.POST)
     if form.is_valid():
         new_comment = form.save(commit=False)
         new_comment.author = request.user
-        new_comment.post_id = post_id
+        new_comment.post_id = post
         new_comment.save()
     return redirect('posts:post', username, post_id)
 
