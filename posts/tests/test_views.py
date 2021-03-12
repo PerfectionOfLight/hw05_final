@@ -51,7 +51,7 @@ class PostViewTests(TestCase):
             text=f'Тестовый пост {i}',
             author=cls.user,
             group=cls.group0,
-            image = cls.uploaded
+            image=cls.uploaded
         ) for i in range(2)
         ])
         cls.follow = Follow.objects.create(

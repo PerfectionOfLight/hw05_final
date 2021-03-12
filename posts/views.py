@@ -92,21 +92,22 @@ def post_edit(request, username, post_id):
     form.save()
     return redirect('posts:post', post.author, post_id)
 
+
 def page_not_found(request, exception):
     return render(
-        request, 
-        "misc/404.html", 
-        {"path": request.path}, 
+        request,
+        "misc/404.html",
+        {"path": request.path},
         status=404
     )
 
 
 def server_error(request):
-    return render(request, "misc/500.html", status=500) 
+    return render(request, "misc/500.html", status=500)
+
 
 @login_required
 def add_comment(request, username, post_id):
-    post = get_object_or_404(Post, pk=post_id, author__username=username)
     form = CommentForm(request.POST)
     if form.is_valid():
         new_comment = form.save(commit=False)
@@ -114,6 +115,7 @@ def add_comment(request, username, post_id):
         new_comment.post_id = post_id
         new_comment.save()
     return redirect('posts:post', username, post_id)
+
 
 @login_required
 def follow_index(request):

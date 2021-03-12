@@ -93,10 +93,10 @@ class PostURLTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_page_not_found(self):
-        """Страица /no_page/ не найдена."""
+        """Страица /page_not_found/ не найдена."""
         response = self.guest_client.get('/page_not_found/')
         self.assertEqual(response.status_code, 404)
-    
+
     def test_add_comments(self):
         """Страица /test_User/1/comment доступна
         авторизованному пользователю."""
