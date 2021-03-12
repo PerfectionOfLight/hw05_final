@@ -86,7 +86,7 @@ class PostViewTests(TestCase):
     def test_main_page_show_correct_context(self):
         """View-функция главной страницы передает нужный контекст"""
         response = self.authorized_client.get(reverse('posts:index'))
-        self.assertEqual(list(response.context.get('paginator').object_list),
+        self.assertEqual(response.context.get('paginator').object_list,
                          list(Post.objects.order_by('-pub_date').all()))
 
     def test_group_page_show_correct_context(self):
@@ -96,7 +96,7 @@ class PostViewTests(TestCase):
         )
         self.assertEqual(response.context.get('group'),
                          PostViewTests.group0)
-        self.assertEqual(list(response.context.get('paginator').object_list),
+        self.assertEqual(response.context.get('paginator').object_list,
                          list(PostViewTests.group0.posts.all()))
 
     def test_new_post_form_correct_context(self):
@@ -138,7 +138,7 @@ class PostViewTests(TestCase):
         self.assertEqual(response.context.get('count'),
                          len(Post.objects.all()))
         self.assertEqual(response.context.get('user_name'), PostViewTests.user)
-        self.assertEqual(list(response.context.get('paginator').object_list),
+        self.assertEqual(response.context.get('paginator').object_list,
                          list(PostViewTests.user.posts.all()))
 
     def test_post_edit_show_correct_context(self):
