@@ -126,7 +126,7 @@ class PostViewTests(TestCase):
             'posts:profile', kwargs={'username': 'test-user'}))
         self.assertEqual(response.context.get('count'),
                          len(Post.objects.all()))
-        self.assertEqual(response.context.get('author'), PostViewTests.user)
+        self.assertEqual(response.context.get('user_name'), PostViewTests.user)
         self.assertEqual(list(response.context.get('paginator').object_list),
                          list(PostViewTests.user.posts.all()))
 
@@ -151,7 +151,7 @@ class PostViewTests(TestCase):
             'posts:post',
             kwargs={'username': 'test-user', 'post_id': 1}))
         post = response.context['post']
-        self.assertEqual(response.context.get('author'),
+        self.assertEqual(response.context.get('user_name'),
                          PostViewTests.user)
         self.assertEqual(response.context.get('count'),
                          len(Post.objects.all()))

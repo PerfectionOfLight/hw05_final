@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 from django.contrib.sites.models import Site
+from django.contrib.flatpages.models import FlatPage
 
 from posts.models import Group, Post
 
@@ -13,11 +14,10 @@ class PostURLTests(TestCase):
         super().setUpClass()
         cls.user = User.objects.create(username='test-user')
         cls.user_non_author = User.objects.create(
-            username='test_User_2')
+            username='test-user-2')
         cls.site = Site(pk=1, domain='localhost:8000', name='localhost:8000')
         cls.site.save()
-        cls.user_non_author = User.objects.create(
-            username='test-user-2')
+
         cls.group = Group.objects.create(
             title='Тестовая группа',
             slug='test-group',
@@ -45,7 +45,7 @@ class PostURLTests(TestCase):
             '/',
             '/group/test-group/',
             '/new/',
-            #'/test-user/',
+            '/test-user/',
             '/test-user/1/edit/',
         )
         for url in url_names:
@@ -76,10 +76,9 @@ class PostURLTests(TestCase):
         """Страица /test-user/1/edit/ перенаправляет анонимного
         пользователя."""
         response = self.guest_client.get(
-            '/test-user/1/edit/', kwargs={'username': 'test-user',
-                                 'post_id': PostURLTests.post.pk},
+            '/test-user/1/edit/',
             follow=True)
-        self.assertRedirects(response, '/test-user/1/')
+        self.assertRedirects(response, '/auth/login/?next=/test-user/1/edit/')
 
     def test_post_edit_non_author(self):
         """Страица /test-user/1/edit/ перенаправляет не автора."""

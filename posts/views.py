@@ -68,7 +68,7 @@ def post_view(request, username, post_id):
     comments = post.comments.all()
     form = CommentForm()
     context = {
-        'author': post.author,
+        'user_name': post.author,
         'post': post,
         'count': post_count,
         'comments': comments,
