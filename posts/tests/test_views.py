@@ -8,7 +8,7 @@ from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.conf import settings
 
-from posts.models import Group, Post
+from posts.models import Group, Post, Follow
 
 User = get_user_model()
 
@@ -32,6 +32,9 @@ class PostViewTests(TestCase):
             content_type='image/gif'
         )
         cls.user = User.objects.create(username='test-user')
+        cls.user2 = User.objects.create(username='follower')
+        cls.user3 = User.objects.create(
+            username='non_follower')
         cls.site = Site(pk=1, domain='localhost:8000', name='localhost:8000')
         cls.site.save()
         cls.group0 = Group.objects.create(
@@ -51,11 +54,19 @@ class PostViewTests(TestCase):
             image = cls.uploaded
         ) for i in range(2)
         ])
+        cls.follow = Follow.objects.create(
+            user=cls.user2,
+            author=cls.user
+        )
 
     def setUp(self):
-        self.guest_client = Client()
+        self.user = PostViewTests.user
         self.authorized_client = Client()
         self.authorized_client.force_login(self.user)
+        self.follower = Client()
+        self.follower.force_login(self.user2)
+        self.non_follower = Client()
+        self.non_follower.force_login(self.user3)
 
     def test_pages_uses_correct_template(self):
         """URL-адрес использует соответствующий шаблон."""
@@ -165,3 +176,36 @@ class PostViewTests(TestCase):
         response_after_delete = self.authorized_client.get(
             reverse('posts:index')).content
         self.assertEqual(response, response_after_delete)
+
+    def test_follow(self):
+        """Авторизованный пользователь может подписываться на других
+        пользователей"""
+        count_before_follow = Follow.objects.count()
+        self.non_follower.get(reverse(
+            'posts:profile_follow',
+            kwargs={'username': PostViewTests.user.username}))
+        count_after_follow = Follow.objects.count()
+        self.assertNotEqual(count_before_follow, count_after_follow)
+
+    def test_unfollow(self):
+        """Авторизованный пользователь может отписываться от других
+        пользователей"""
+        count_before_unfollow = Follow.objects.count()
+        self.follower.get(reverse(
+            'posts:profile_unfollow',
+            kwargs={'username': PostViewTests.user.username}))
+        count_after_unfollow = Follow.objects.count()
+        self.assertNotEqual(count_before_unfollow, count_after_unfollow)
+
+    def test_follow_context_for_follow_unfollow(self):
+        """Новая запись пользователя появляется в ленте тех, кто на него
+        подписан и не появляется в ленте тех, кто не подписан на него"""
+        post = Post.objects.create(
+            text='test text ',
+            author=PostViewTests.user,
+            group=PostViewTests.group0
+        )
+        response = self.follower.get(reverse('posts:follow_index'))
+        self.assertEqual(response.context['page'][0].pk, post.pk)
+        response = self.non_follower.get(reverse('posts:follow_index'))
+        self.assertEqual(response.context['page'].object_list.count(), 0)

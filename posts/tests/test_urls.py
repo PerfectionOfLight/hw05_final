@@ -100,7 +100,12 @@ class PostURLTests(TestCase):
     def test_add_comments(self):
         """Страица /test_User/1/comment доступна
         авторизованному пользователю."""
-        response = self.authorized_client.get(
-            '/test-user/1/comment/', kwargs={'username': PostURLTests.user.username,
-                                   'post_id': PostURLTests.post.pk})
+        response = self.authorized_client.get('/test-user/1/comment/')
         self.assertRedirects(response, '/test-user/1/')
+
+    def test_add_comments_guest(self):
+        """Страица /test_User/1/comment перенаправляет
+        анонимного пользователя на вход."""
+        response = self.guest_client.get('/test-user/1/comment/')
+        self.assertRedirects(response,
+                             '/auth/login/?next=/test-user/1/comment/')
