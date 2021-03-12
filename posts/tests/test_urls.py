@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 from django.contrib.sites.models import Site
-from django.contrib.flatpages.models import FlatPage
 
 from posts.models import Group, Post
 
