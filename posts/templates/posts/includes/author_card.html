@@ -19,7 +19,7 @@
                 Записей: {{ count }}
             </div>
         </li>
-    {% if user.username != user_name.username %}
+    {% if user != user_name and user.is_authenticated %}
         <li class="list-group-item">
     {% if following %}
     <a class="btn btn-lg btn-light"
