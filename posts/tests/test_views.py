@@ -207,7 +207,7 @@ class PostViewTests(TestCase):
         )
         response = self.follower.get(reverse('posts:follow_index'))
         self.assertEqual(response.context['page'][0].pk, post.pk)
-    
+
     def test_follow_context_for_unfollow(self):
         """Новая запись не появляется в ленте тех, кто не подписан на него"""
         response = self.non_follower.get(reverse('posts:follow_index'))
