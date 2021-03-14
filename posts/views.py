@@ -31,13 +31,12 @@ def group_posts(request, slug):
 
 @login_required
 def new_post(request):
-    form = PostForm(request.POST or None)
+    form = PostForm(request.POST or None, files=request.FILES or None)
     if request.method == 'POST' and form.is_valid():
         post = form.save(commit=False)
         post.author = request.user
         post.save()
         return redirect('posts:index')
-    form = PostForm()
     return render(request, 'posts/new.html', {'form': form})
 
 
@@ -113,7 +112,7 @@ def add_comment(request, username, post_id):
     if form.is_valid():
         new_comment = form.save(commit=False)
         new_comment.author = request.user
-        new_comment.post_id = post.pk
+        new_comment.post = post
         new_comment.save()
     return redirect('posts:post', username, post_id)
 
