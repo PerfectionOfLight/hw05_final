@@ -5,21 +5,20 @@
 
 <main role="main" class="container">
     <div class="row">
-            <div class="col-md-3 mb-3 mt-1">
-                    {% include "posts/includes/author_card.html" %}
+        <div class="col-md-3 mb-3 mt-1">
+            {% include "posts/includes/author_card.html" %}
 
-            </div>
+        </div>
 
-            <div class="col-md-9">
-                {% for post in page %}
+        <div class="col-md-9">
+            {% for post in page %}
                 {% include "posts/includes/post_card.html" %}
-                {% endfor %}
-                {% if page.has_other_pages %}
+            {% endfor %}
+            {% if page.has_other_pages %}
                 {% include "includes/paginator.html" with items=page paginator=paginator%}
-                {% endif %}
-     </div>
+            {% endif %}
+        </div>
     </div>
 </main>
-
 
 {% endblock %}

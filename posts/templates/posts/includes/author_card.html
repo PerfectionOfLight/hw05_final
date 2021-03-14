@@ -21,18 +21,18 @@
         </li>
     {% if user != user_name and user.is_authenticated %}
         <li class="list-group-item">
-    {% if following %}
-    <a class="btn btn-lg btn-light"
+        {% if following %}
+        <a class="btn btn-lg btn-light"
             href="{% url 'posts:profile_unfollow' user_name.username %}" role="button">
             Отписаться
-    </a>
-    {% else %}
-    <a class="btn btn-lg btn-primary"
+        </a>
+        {% else %}
+        <a class="btn btn-lg btn-primary"
             href="{% url 'posts:profile_follow' user_name.username %}" role="button">
-    Подписаться
-    </a>
+            Подписаться
+        </a>
+        {% endif %}
+        </li>
     {% endif %}
-</li>
-{% endif %}
     </ul>
 </div>

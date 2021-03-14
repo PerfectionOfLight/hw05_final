@@ -6,8 +6,8 @@
 <p>{{ group.description| linebreaksbr}}</p>
 
     {% for post in page %}
-    {% include "posts/includes/post_card.html" %}
-    {% if not forloop.last %}<hr>{% endif %}
+        {% include "posts/includes/post_card.html" %}
+        {% if not forloop.last %}<hr>{% endif %}
     {% endfor %}
 
     {% if page.has_other_pages %}

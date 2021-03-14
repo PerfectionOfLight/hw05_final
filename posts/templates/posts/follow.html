@@ -7,14 +7,14 @@
            <h1> Ваши подписки</h1>
         {% load cache %}
         {% cache 20 index page follow%}
-                {% for post in page %}
-                    {% include "posts/includes/post_card.html" with post=post %}
-                {% endfor %}
+            {% for post in page %}
+                {% include "posts/includes/post_card.html" with post=post %}
+            {% endfor %}
         {% endcache %}
     </div>
-
-        {% if page.has_other_pages %}
-            {% include "includes/paginator.html" with items=page paginator=paginator%}
-        {% endif %}
+    
+    {% if page.has_other_pages %}
+        {% include "includes/paginator.html" with items=page paginator=paginator%}
+    {% endif %}
 
 {% endblock %}

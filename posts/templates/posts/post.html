@@ -5,14 +5,14 @@
 
 <main role="main" class="container">
     <div class="row">
-            <div class="col-md-3 mb-3 mt-1">
-                {% include "posts/includes/author_card.html"%}
+        <div class="col-md-3 mb-3 mt-1">
+            {% include "posts/includes/author_card.html"%}
         </div>
 
         <div class="col-md-9">
-                {% include "posts/includes/post_card.html" with post=post comment=True%}
-                {% include "posts/includes/comments.html"%}
-     </div>
+            {% include "posts/includes/post_card.html" with post=post comment=True%}
+            {% include "posts/includes/comments.html"%}
+        </div>
     </div>
 </main>
 
