@@ -11,7 +11,7 @@ __pycache__/
 .DS_Store
 .AppleDouble
 .LSOverride
-.vscode
+.vscode/
 
 *.sublime-project
 *.sublime-workspace
@@ -26,3 +26,7 @@ htmlcov/
 .coverage.*
 coverage.xml
 *.cover
+
+.jsbeautifyrc
+
+.env

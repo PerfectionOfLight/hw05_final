@@ -46,7 +46,7 @@ class Post(models.Model):
 class Comment(models.Model):
     post = models.ForeignKey('Post',
                              on_delete=models.CASCADE,
-                             related_name="comments",
+                             related_name='comments',
                              verbose_name="Пост",
                              help_text="К какому посту относиться комментарий")
     author = models.ForeignKey(User,
@@ -58,7 +58,7 @@ class Comment(models.Model):
                             help_text="Текст комментария")
     created = models.DateTimeField(verbose_name="Дата публикации",
                                    auto_now_add=True,
-                                   help_text="Автоматически заполняется "
+                                   help_text="Автоматически заполняется"
                                              "сегодняшней датой")
 
 
